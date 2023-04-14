@@ -61,4 +61,30 @@ with DAG(
         task_id="task-two",
     )
 
-    t1 >> t2
+    t3 = KubernetesPodOperator(
+        dag=dag,
+        name='send_message_pulsar_3',
+        namespace='airflow',
+        image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
+        image_pull_secrets=[k8s.V1LocalObjectReference("harbor-knada-credential")],
+        env_from=environments,
+        is_delete_operator_pod=True,
+        get_logs=True,
+        in_cluster=True,
+        task_id="task-three",
+    )
+
+    t4 = KubernetesPodOperator(
+        dag=dag,
+        name='send_message_pulsar_4',
+        namespace='airflow',
+        image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
+        image_pull_secrets=[k8s.V1LocalObjectReference("harbor-knada-credential")],
+        env_from=environments,
+        is_delete_operator_pod=True,
+        get_logs=True,
+        in_cluster=True,
+        task_id="task-four",
+    )
+
+    [t1, t2, t3] >> t4 
