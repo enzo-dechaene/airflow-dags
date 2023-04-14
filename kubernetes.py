@@ -24,6 +24,7 @@ environments = [
     k8s.V1EnvVar(name="PULSAR_OUTPUT_MESSAGE", value="GENERATION_ETABLISSEMENT_OK")
 ]
 
+DAG_ID = "pulsar"
 
 with DAG(
     DAG_ID,
