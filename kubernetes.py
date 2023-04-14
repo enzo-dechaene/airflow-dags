@@ -36,7 +36,7 @@ with DAG(
 ) as dag:
     t1 = KubernetesPodOperator(
         dag=dag
-        name='send_message_pulsar',
+        name='send_message_pulsar_1',
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
         image_pull_secrets=[k8s.V1LocalObjectReference("harbor-knada-credential")],
@@ -49,7 +49,7 @@ with DAG(
 
     t2 = KubernetesPodOperator(
         dag=dag
-        name='send_message_pulsar',
+        name='send_message_pulsar_2',
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
         image_pull_secrets=[k8s.V1LocalObjectReference("harbor-knada-credential")],
