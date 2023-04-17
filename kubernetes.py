@@ -13,15 +13,28 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
-configmaps = [
-    k8s.V1EnvFromSource(config_map_ref=k8s.V1ConfigMapEnvSource(name="test-configmap-1")),
-    k8s.V1EnvFromSource(config_map_ref=k8s.V1ConfigMapEnvSource(name="test-configmap-2")),
-]
-
-environments = [
+environments_etab = [
     k8s.V1EnvVar(name="PULSAR_URL", value="pulsar://172.16.106.50:30767"), 
     k8s.V1EnvVar(name="PULSAR_INPUT_MESSAGE", value="GENERATION_ETABLISSEMENT"),
     k8s.V1EnvVar(name="PULSAR_OUTPUT_MESSAGE", value="GENERATION_ETABLISSEMENT_OK")
+]
+
+environments_userdata = [
+    k8s.V1EnvVar(name="PULSAR_URL", value="pulsar://172.16.106.50:30767"), 
+    k8s.V1EnvVar(name="PULSAR_INPUT_MESSAGE", value="GENERATION_USERDATA"),
+    k8s.V1EnvVar(name="PULSAR_OUTPUT_MESSAGE", value="GENERATION_USERDATA_OK")
+]
+
+environments_mobilite_auth = [
+    k8s.V1EnvVar(name="PULSAR_URL", value="pulsar://172.16.106.50:30767"), 
+    k8s.V1EnvVar(name="PULSAR_INPUT_MESSAGE", value="GENERATION_MOBILITE_AUTH_AUTH"),
+    k8s.V1EnvVar(name="PULSAR_OUTPUT_MESSAGE", value="GENERATION_MOBILITE_AUTH_AUTH_OK")
+]
+
+environments_utilisateur = [
+    k8s.V1EnvVar(name="PULSAR_URL", value="pulsar://172.16.106.50:30767"), 
+    k8s.V1EnvVar(name="PULSAR_INPUT_MESSAGE", value="GENERATION_UTILISATEUR"),
+    k8s.V1EnvVar(name="PULSAR_OUTPUT_MESSAGE", value="GENERATION_UTILISATEUR_OK")
 ]
 
 DAG_ID = "pulsar"
@@ -37,14 +50,10 @@ with DAG(
 ) as dag:
     t1 = KubernetesPodOperator(
         dag=dag,
-        name='send_message_pulsar_1',
+        name='send_message_pulsar_etablissement',
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
-        image_pull_secrets=[k8s.V1LocalObjectReference("harbor-knada-credential")],
-        env_vars=environments,
-        is_delete_operator_pod=True,
-        get_logs=True,
-        in_cluster=True,
+        env=environments_etab,
         task_id="task-one",
     )
 
@@ -53,11 +62,7 @@ with DAG(
         name='send_message_pulsar_2',
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
-        image_pull_secrets=[k8s.V1LocalObjectReference("harbor-knada-credential")],
-        env_vars=environments,
-        is_delete_operator_pod=True,
-        get_logs=True,
-        in_cluster=True,
+        env_vars=environments_userdata,
         task_id="task-two",
     )
 
@@ -66,11 +71,7 @@ with DAG(
         name='send_message_pulsar_3',
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
-        image_pull_secrets=[k8s.V1LocalObjectReference("harbor-knada-credential")],
-        env_from=environments,
-        is_delete_operator_pod=True,
-        get_logs=True,
-        in_cluster=True,
+        env_from=environments_mobilite_auth,
         task_id="task-three",
     )
 
@@ -79,11 +80,7 @@ with DAG(
         name='send_message_pulsar_4',
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
-        image_pull_secrets=[k8s.V1LocalObjectReference("harbor-knada-credential")],
-        env_vars=environments,
-        is_delete_operator_pod=True,
-        get_logs=True,
-        in_cluster=True,
+        env_vars=environments_utilisateur,
         task_id="task-four",
     )
 
