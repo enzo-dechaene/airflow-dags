@@ -53,7 +53,7 @@ with DAG(
         name='send_message_pulsar_etablissement',
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
-        env=environments_etab,
+        env_vars=environments_etab,
         task_id="task-one",
     )
 
@@ -71,7 +71,7 @@ with DAG(
         name='send_message_pulsar_3',
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
-        env_from=environments_mobilite_auth,
+        env_vars=environments_mobilite_auth,
         task_id="task-three",
     )
 
