@@ -54,7 +54,7 @@ with DAG(
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
         env_vars=environments_etab,
-        task_id="task-one",
+        task_id="etablissement",
     )
 
     t2 = KubernetesPodOperator(
@@ -63,7 +63,7 @@ with DAG(
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
         env_vars=environments_userdata,
-        task_id="task-two",
+        task_id="userdata",
     )
 
     t3 = KubernetesPodOperator(
@@ -72,7 +72,7 @@ with DAG(
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
         env_vars=environments_mobilite_auth,
-        task_id="task-three",
+        task_id="mobilite_auth",
     )
 
     t4 = KubernetesPodOperator(
@@ -81,7 +81,7 @@ with DAG(
         namespace='airflow',
         image='harbor.knada.rancher.kosmos.fr/public/send_message_pulsar:v1.0.11',
         env_vars=environments_utilisateur,
-        task_id="task-four",
+        task_id="utilisateur",
     )
 
     [t1, t2, t3] >> t4 
